@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/state.ts","./src/diamond/diamond.tsx","./src/diamond/brilliantcut.ts","./src/diamond/facettracer.ts","./src/scene/atmosphere.tsx","./src/scene/ground.tsx","./src/scene/linearexposure.ts","./src/scene/scene.tsx","./src/scene/studioenv.ts","./src/scene/textures.ts","./src/ui/overlay.tsx","./vite.config.ts"],"version":"5.9.3"}
