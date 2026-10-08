@@ -30,8 +30,8 @@ export function Diamond() {
     const settings = getSettings();
     if (settings.autoRotate) {
       mesh.rotation.y += delta * 0.3 * settings.rotateSpeed;
+      mesh.rotation.x = -0.14 + Math.sin(clock.elapsedTime * 0.24) * 0.045;
     }
-    mesh.rotation.x = -0.14 + Math.sin(clock.elapsedTime * 0.24) * 0.045;
 
     mesh.updateMatrixWorld();
 

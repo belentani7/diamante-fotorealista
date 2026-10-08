@@ -32,3 +32,18 @@ next-env.d.ts
 # IDE
 .idea/
 .vscode/
+# --- guardias-sinc-2026-10-08 (auto) ---
+node_modules/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.next/
+.nuxt/
+.turbo/
+dist/
+build/
+coverage/
+*.log
+.DS_Store

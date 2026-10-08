@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getBrilliantCut } from '../diamond/brilliantCut';
 import { applyPreset, setSettings, useSettings, type PresetKey, type Settings } from '../state';
 
@@ -112,23 +112,25 @@ function Panel({
 
 export function Overlay() {
   const settings = useSettings();
+  const [panelVisible, setPanelVisible] = useState(true);
   const { metrics, counts, planeCount } = getBrilliantCut();
   const patch = (values: Partial<Settings>) => setSettings(values);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.target instanceof HTMLInputElement) return;
+      if (event.defaultPrevented || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target instanceof Element && event.target.closest('input, textarea, select, button, a, [contenteditable]')) return;
       const map: Record<string, PresetKey> = { '1': 'baja', '2': 'media', '3': 'alta', '4': 'ultra' };
       if (map[event.key]) applyPreset(map[event.key]);
       if (event.key === ' ') {
         event.preventDefault();
         setSettings({ autoRotate: !settings.autoRotate });
       }
-      if (event.key.toLowerCase() === 'h') setSettings({ showStats: !settings.showStats });
+      if (event.key.toLowerCase() === 'h') setPanelVisible(value => !value);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [settings.autoRotate, settings.showStats]);
+  }, [settings.autoRotate]);
 
   return (
     <div className="ui">
@@ -143,6 +145,9 @@ export function Overlay() {
             </p>
           </div>
         </div>
+        <button type="button" className="toggle" aria-controls="optical-controls" aria-expanded={panelVisible} onClick={() => setPanelVisible(value => !value)}>
+          {panelVisible ? 'Ocultar controles' : 'Mostrar controles'}
+        </button>
         {settings.showStats && (
           <div className="ui__stats">
             <FpsMeter />
@@ -154,7 +159,7 @@ export function Overlay() {
         )}
       </header>
 
-      <div className="panels">
+      <div id="optical-controls" className="panels" hidden={!panelVisible}>
         <Panel title="Calidad">
         <div className="presets">
           {PRESET_LABELS.map(({ key, label }) => (
@@ -163,6 +168,7 @@ export function Overlay() {
               type="button"
               className={`preset${settings.preset === key ? ' preset--on' : ''}`}
               onClick={() => applyPreset(key)}
+              aria-pressed={settings.preset === key}
             >
               {label}
             </button>
